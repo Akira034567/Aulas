@@ -1,0 +1,466 @@
+//#include <Wire.h> 
+//#include <LiquidCrystal_I2C.h>
+
+//LiquidCrystal_I2C lcd(0x27, 2,1,0,4,5,6,7,3, Positive); 
+
+#include <Adafruit_LiquidCrystal.h>
+Adafruit_LiquidCrystal lcd(0);
+
+
+#define BotA 2
+#define BotB 3
+#define BotC 4
+#define BotD 5
+
+int pontos = 0;
+int inicia = 0;
+bool x = false;
+
+byte olho1[8] = {
+  B00011,
+  B00111,
+  B01111,
+  B01111,
+  B01111,
+  B01111,
+  B01111,
+  B01111,
+};
+byte olho2[8] = {
+  B01111,
+  B01111,
+  B01111,
+  B01111,
+  B01111,
+  B00111,
+  B00011,
+  B00000
+};
+byte olho3[8] = {
+  B11000,
+  B11100,
+  B11110,
+  B11110,
+  B11110,
+  B11110,
+  B11110,
+  B11110
+};
+byte olho4[8] = {
+  B11110,
+  B11110,
+  B11110,
+  B11110,
+  B11110,
+  B11000,
+  B11011,
+  B00011,
+}; 
+byte sorriso1[8] = {
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B11000,
+   B01100,
+   B00111,
+   B00011,
+};
+byte sorriso3[8] = {
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B00011,
+   B00110,
+   B11100,
+   B11000,
+};
+byte sorriso4[8] = {
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B11111,
+   B11111,
+};
+byte sorriso5[8] = {
+   B11111,
+   B11111,
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+   B00000,
+};
+
+void setup()
+{
+  pinMode(BotA,INPUT_PULLUP);
+  pinMode(BotB,INPUT_PULLUP);
+  pinMode(BotC,INPUT_PULLUP);
+  pinMode(BotD,INPUT_PULLUP);
+
+  pinMode(6,OUTPUT);
+  pinMode(7,OUTPUT);
+  pinMode(8,OUTPUT);
+  pinMode(9,OUTPUT);
+  
+  lcd.begin(20, 4);
+ 
+  lcd.createChar(6, olho1);
+  lcd.createChar(2, olho2);
+  lcd.createChar(3, olho3);
+  lcd.createChar(4, olho4);
+  lcd.createChar(5, sorriso1);
+  lcd.createChar(7, sorriso3);
+  lcd.createChar(8, sorriso4);                                                                                             
+  lcd.createChar(9, sorriso5);
+  
+}
+
+void loop(){
+  digitalWrite(6, HIGH);
+  digitalWrite(7, HIGH);
+  digitalWrite(8, HIGH);
+  digitalWrite(9, HIGH);
+
+  pontos = 0;
+  inicia = 0;
+  x = false;
+  lcd.clear();
+  
+  while (inicia == 0) {
+    
+    lcd.setCursor(5, 0);
+    lcd.write(6);
+    lcd.setCursor(5, 1);
+    lcd.write(2);
+    lcd.setCursor(6, 0);
+    lcd.write(3);
+    lcd.setCursor(6, 1);
+    lcd.write(4);
+    
+    lcd.setCursor(13, 0);
+    lcd.write(6);
+    lcd.setCursor(13, 1);
+    lcd.write(2);
+    lcd.setCursor(14, 0);
+    lcd.write(3);
+    lcd.setCursor(14, 1);
+    lcd.write(4);
+
+    lcd.setCursor(7, 2);
+    lcd.write(5);
+    lcd.setCursor(8, 2);
+    lcd.write(8);
+    lcd.setCursor(9, 2);
+    lcd.write(8);
+    lcd.setCursor(10, 2);
+    lcd.write(8);
+    lcd.setCursor(11, 2);
+    lcd.write(8);
+    lcd.setCursor(12, 2);
+    lcd.write(7);
+
+    delay(1000);
+    
+    lcd.setCursor(5, 0);
+    lcd.write(8);
+    lcd.setCursor(5, 1);
+    lcd.write(9);
+    lcd.setCursor(6, 0);
+    lcd.write(8);
+    lcd.setCursor(6, 1);
+    lcd.write(9);
+    
+    lcd.setCursor(13, 0);
+    lcd.write(8);
+    lcd.setCursor(13, 1);
+    lcd.write(9);
+    lcd.setCursor(14, 0);
+    lcd.write(8);
+    lcd.setCursor(14, 1);
+    lcd.write(9);
+    
+    delay(1000);
+    
+    lcd.setCursor(5, 0);
+    lcd.write(6);
+    lcd.setCursor(5, 1);
+    lcd.write(2);
+    lcd.setCursor(6, 0);
+    lcd.write(3);
+    lcd.setCursor(6, 1);
+    lcd.write(4);
+    
+    lcd.setCursor(13, 0);
+    lcd.write(6);
+    lcd.setCursor(13, 1);
+    lcd.write(2);
+    lcd.setCursor(14, 0);
+    lcd.write(3);
+    lcd.setCursor(14, 1);
+    lcd.write(4);
+    
+    piscaA();
+    for(int p=0; p<10; p++){
+    x = digitalRead(BotA);
+    if(x==true){
+    inicia=1;
+    p=10;      }
+    delay(100);
+     }
+    }
+
+  
+  for(int z=0; z<11; z++){
+  switch(z){
+  case 0:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Calcule 365^0:");
+        lcd.setCursor(0,1);
+        lcd.print("a)365   b)1");
+     	lcd.setCursor(0,2);
+    	lcd.print("c)0     d)90");
+        if(AnalisaBotao()=='B'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+  break;
+    
+  case 1:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Qual o valor de pi?");
+      	lcd.setCursor(0,1);
+        lcd.print("a)3,2    b)31,5");
+     	lcd.setCursor(0,2);
+    	lcd.print("c)3,15   d)3,14");
+        if(AnalisaBotao()=='D'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+   break;
+  
+   case 2:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Qual a classe que");
+    	lcd.setCursor(0,1);
+    	lcd.print("expressa estado?");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Adverbio  b)Artigo");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Verbo   d)Adjetivo");
+        if(AnalisaBotao()=='C'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+   break;
+  
+   case 3:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Qual desses nao sao");
+    	lcd.setCursor(0,1);
+    	lcd.print("pronomes obliquos?");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Eu   b)Mim");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Te   d)Lhe");
+        if(AnalisaBotao()=='A'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+   break;
+  
+   case 4:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("A luz tem que efeito");
+    	lcd.setCursor(0,1);
+    	lcd.print("em lente divergente?");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Espalha   b)Colore");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Foca      d)Some");
+        if(AnalisaBotao()=='A'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+   break;
+  
+   case 5:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Qual a teoria criada");
+    	lcd.setCursor(0,1);
+    	lcd.print("por Karl Marx?");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Vida  b)Mais-valia");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Empirismo  d)Moral");
+        if(AnalisaBotao()=='B'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+   break;
+  
+   case 6:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Traduza already");
+    	lcd.setCursor(0,1);
+    	lcd.print("para portugues:");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Ainda    b)Nunca");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Sempre   d)Já");
+        if(AnalisaBotao()=='D'){
+         certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+ 	break;
+  
+ 	case 7:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Identifique o");
+    	lcd.setCursor(0,1);
+    	lcd.print("elemento contavel:");
+    	lcd.setCursor(0,2);
+        lcd.print("a)water    b)iron");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)cup      d)rice");
+        if(AnalisaBotao()=='C'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+ 	break;
+  
+  	case 8:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Diga uma estrutura");
+    	lcd.setCursor(0,1);
+    	lcd.print("que virus sempre tem");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Cloroplasto b)Hifa");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)Nucleo  d)Envelope");
+        if(AnalisaBotao()=='C'){
+          certo();
+        }else{
+         errado();
+        }
+      finalizaquestao();
+   	break;
+  
+  	case 9:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Em que continente");
+    	lcd.setCursor(0,1);
+    	lcd.print("fica o pais Tuvalu?");
+    	lcd.setCursor(0,2);
+        lcd.print("a)Oceania   b)Africa");
+     	lcd.setCursor(0,3);
+    	lcd.print("c)America   d)Europa");
+        if(AnalisaBotao()=='A'){
+          certo();
+        }else{
+          errado();
+        }
+      finalizaquestao();
+	break;
+    
+    case 10:
+    	lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Voce terminou o jogo");
+    	lcd.setCursor(0,1);
+    	lcd.print("e fez um total de");
+    	lcd.setCursor(9,2);
+        lcd.print(pontos);
+     	lcd.setCursor(12,2);
+    	lcd.print("ponto(s)!");
+    	delay(2000);
+    break;
+    }
+  }
+}
+  
+
+
+char AnalisaBotao(){
+  bool BotaoPressionado = true;
+  
+  while(BotaoPressionado){
+    if(/*!*/digitalRead(BotA)){
+      BotaoPressionado = false;
+      return 'A';
+    }else if(/*!*/digitalRead(BotB)){
+      BotaoPressionado = false;
+      return 'B';
+    }else if(/*!*/digitalRead(BotC)){
+      BotaoPressionado = false;
+      return 'C';
+    }else if(/*!*/digitalRead(BotD)){
+      BotaoPressionado = false;
+      return 'D';
+    }
+  }
+}
+
+
+void finalizaquestao() {
+  delay(1000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Voce esta com ");
+  lcd.setCursor(0,1);
+  lcd.print(pontos);
+  lcd.setCursor(2,1);
+  lcd.print(" ponto(s)!");
+  delay(1000);
+}
+
+void certo() {
+   lcd.clear();
+   lcd.setCursor(0,1);
+   lcd.print("Correto!");
+   pontos++;
+}
+
+void errado() {
+   lcd.clear();
+   lcd.setCursor(0,1);
+   lcd.print("Errado!");
+}
+
+void piscaA() {
+    digitalWrite(6, LOW);
+    delay(500);
+    digitalWrite(6, HIGH);
+}
